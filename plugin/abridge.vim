@@ -1,7 +1,7 @@
 " File: abridge.vim
 " Author: justin domingue <domingue.justin@gmail.com>
 " Last Change: Fri 28 Feb 12:53:05 2014
-" Version: 0.3
+" Version: 0.4
 " Credits: batman990 (iabassist.vim), Vim Wiki
 " Usage:
 " 
@@ -14,6 +14,7 @@
 " ,, select next placeholder
 "
 
+" SETUP {{{
 " Do not load more than once, but allow the user to force reloading
 if exists('loaded_abridge') && loaded_abridge == 1
   finish
@@ -24,6 +25,8 @@ let loaded_abridge = 1
 augroup abridge
   autocmd!    
  augroup END
+
+" }}}
 
 " FUNCTIONS {{{
 
@@ -46,6 +49,20 @@ function! ExpandIfSafe(key, seq)
   endif
 endfunction
 
+" Go to next match of pattern '<\d>' only if match is found in the rest of the
+" file (no wrap). Otherwise, insert 'key'
+function! SelectNetxIfSafe(key)
+  let next = search('<\d>', 'cW')
+  if next == 0
+    echo "No match found!"
+    return a:key
+  else
+    echo "Match!"
+    normal! vf>c
+    return " "
+  endif
+endfunction
+
 " Helper function to add abbreviations according to a Filetype
 function! Abridge(from, to, filetype)
   exec "autocmd abridge Filetype " . a:filetype . 
@@ -62,8 +79,8 @@ if !exists('g:abridge_map_keys')
     let g:abridge_map_keys = ",,"
 endif
 
-execute "noremap <silent> " . g:abridge_map_keys . " /<\\d><CR>:noh<CR>vf>c"
-execute "inoremap <silent> " . g:abridge_map_keys . "  <ESC>/<\\d><CR>:noh<CR>vf>c"
+execute "noremap <silent> " . g:abridge_map_keys . " :call SelectNetxIfSafe('" . g:abridge_map_keys . "')<CR>"
+execute "inoremap <silent> " . g:abridge_map_keys . " <C-R>=SelectNetxIfSafe('" . g:abridge_map_keys . "')<CR>"
 
 " }}}
 
