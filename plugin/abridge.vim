@@ -1,7 +1,7 @@
 " File: abridge.vim
 " Author: justin domingue <domingue.justin@gmail.com>
 " Last Change: Fri 28 Feb 12:53:05 2014
-" Version: 0.02
+" Version: 0.3
 " Credits: batman990 (iabassist.vim), Vim Wiki
 " Usage:
 " 
@@ -25,9 +25,7 @@ augroup abridge
   autocmd!    
  augroup END
 
-" ============================
-"         FUNCTIONS
-" ============================
+" FUNCTIONS {{{
 
 " Help delete character if it is 'empty space'
 " stolen from Vim manual
@@ -56,21 +54,20 @@ function! Abridge(from, to, filetype)
         \ "')<CR>"
 endfunction
 
+" }}}
 
-" ============================
-"           MAPPINGS
-" ============================
+" MAPPINGS {{{
 
 if !exists('g:abridge_map_keys')
     let g:abridge_map_keys = ",,"
 endif
 
-execute "noremap " . g:abridge_map_keys . " /<\d><CR>:noh<CR>vf>c"
-execute "inoremap " . g:abridge_map_keys . "  <ESC>/<\d><CR>:noh<CR>vf>c"
+execute "noremap <silent> " . g:abridge_map_keys . " /<\\d><CR>:noh<CR>vf>c"
+execute "inoremap <silent> " . g:abridge_map_keys . "  <ESC>/<\\d><CR>:noh<CR>vf>c"
 
-" ============================
-"   ABBREVIATION DEFINITIONS
-" ============================
+" }}}
+
+" ABBREVIATION DEFINITIONS {{{
 
 " Do not define the abbreviations if the user doesn't want to
 " User has to put `let abridge_abbreviations = 1` in it's vimrc
@@ -113,5 +110,7 @@ call Abridge("#d", "#define <1>", "c,cpp")
 
 " Templates
 call Abridge("main", "int main(int argc, char *argv[]) {<CR><1><CR>}", "c,cpp")"
+
+" C abbreviations }}}
 
 " }}}
