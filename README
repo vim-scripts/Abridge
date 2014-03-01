@@ -1,0 +1,58 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4878
+
+Easily create custom snippets automatically expanded when recognized, or use the default ones provided. No need to hit <TAB> or some other key combinations.
+
+See GitHub for most recent version : https://github.com/justindomingue/Abridge
+Animated screenshot : https://github.com/justindomingue/Abridge/blob/master/screenshot.gif
+
+= Example Workflow
+
+In a c or c++ file,
+
+      for<space>i = 0,,i < 10,,++i,,
+
+will become
+
+      for(i = 0; i < 10; ++i) {
+      
+       }
+
+Once you hit <space>, vim recognized `for` and expands the snippet as defined in abridge.vim (easily modified). ",," selects the next placeholder (you could change it to <TAB> if you wanted, see below).
+
+= Usage
+
+Abridge comes with some default snippets. The goal is not to be exahaustive, but rather to define commonly use snippets.
+
+You can define your own very easily. Add the command in your .vimrc :
+
+call Abridge("to", "from", "filetype")
+        from : abbreviation (contains <1> - see note below)
+          to : expanded expression
+    filetype : file type on which to apply the abbreviation ('*' for all file types)
+This command will create an abbreviation for to which will expand to from in file with type filetype.
+
+Note from must contain <1>. This is where the cursor will be positioned after the expansion.
+
+For example,
+
+call Abridge("for","for(<1>; <2>; <3>) {<CR><4><CR>}", "c,cpp")
+will expand for<non-keyword character> to
+
+for(<1>; <2>; <3>) {
+  <4>
+}
+Note <non-keyword character> helps vim recognize the abbreviation : <ESC>, <CR>, <space>
+
+- Mapping
+
+,, : go to next <\d> and substitute (if not match is found, insert ",,")
+
+-- Disable Mapping
+
+To overwrite the mapping keys, set g:abridge_map_keys to your preferred keys. For example,
+
+let g:abridge_map_keys = "<tab>"
+
+-- Disable Default Snippets
+
+Add let abridge_default_abb = 0 to your vimrc.
